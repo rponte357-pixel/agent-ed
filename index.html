@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Agent ED: The Sound Code</title>
+    <title>Misión Pronunciación -ed</title>
     <style>
         :root {
             --rojo: #ff4757;
@@ -14,113 +14,304 @@
             --texto: #ffffff;
         }
 
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Segoe UI', sans-serif; }
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
 
-        body { margin: 0; background-color: var(--oscuro); color: var(--texto); display: flex; flex-direction: column; min-height: 100vh; overflow: hidden; }
+        body {
+            margin: 0;
+            background-color: var(--oscuro);
+            color: var(--texto);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
 
-        .nav { position: fixed; bottom: 0; width: 100%; display: flex; background: #000; padding: 10px 0; z-index: 1000; }
-        .nav-item { flex: 1; text-align: center; color: #8e9297; font-size: 0.8em; cursor: pointer; }
+        /* Navegación Inferior Móvil */
+        .nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            display: flex;
+            background: #000;
+            padding: 10px 0;
+            z-index: 1000;
+        }
+
+        .nav-item {
+            flex: 1;
+            text-align: center;
+            color: #8e9297;
+            font-size: 0.8em;
+            cursor: pointer;
+        }
+
         .nav-item.active { color: var(--amarillo); }
 
-        .content { flex: 1; padding: 20px; padding-bottom: 80px; overflow-y: auto; }
+        /* Contenedores */
+        .content {
+            flex: 1;
+            padding: 20px;
+            padding-bottom: 80px;
+            overflow-y: auto;
+        }
+
         .hidden { display: none !important; }
 
-        .rule-card { background: var(--tarjeta); border-radius: 15px; padding: 20px; margin-bottom: 20px; border-left: 5px solid white; position: relative; }
+        /* Estilos del Manual (Tus Reglas) */
+        .rule-card {
+            background: var(--tarjeta);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 5px solid white;
+        }
         .rule-card.id { border-color: var(--rojo); }
         .rule-card.t { border-color: var(--amarillo); }
         .rule-card.d { border-color: var(--verde); }
 
-        .btn-audio { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.1); border: none; border-radius: 50%; width: 40px; height: 40px; color: white; cursor: pointer; }
+        .rule-card h2 { margin-top: 0; font-size: 1.4em; }
+        .rule-card h3 { color: #bbb; font-size: 1em; }
 
-        .timer-container { width: 100%; height: 8px; background: #444; border-radius: 4px; margin-bottom: 20px; overflow: hidden; }
-        .timer-bar { height: 100%; width: 100%; background: var(--amarillo); transition: width 0.1s linear; }
+        /* Estilos del Juego */
+        .game-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
 
-        .verb-display { background: var(--tarjeta); height: 160px; display: flex; align-items: center; justify-content: center; border-radius: 20px; font-size: 2.5em; font-weight: bold; margin-bottom: 20px; border: 2px solid #444; text-align: center; }
+        .verb-display {
+            background: var(--tarjeta);
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 20px;
+            font-size: 3em;
+            font-weight: bold;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            border: 2px solid #444;
+        }
 
-        .choice-btn { width: 100%; padding: 18px; border: none; border-radius: 12px; color: white; font-size: 1.1em; font-weight: bold; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; cursor: pointer; }
+        .btn-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        .choice-btn {
+            padding: 20px;
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 1.2em;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
         .btn-id { background: var(--rojo); }
         .btn-t { background: var(--amarillo); }
         .btn-d { background: var(--verde); }
 
-        .stats-bar { display: flex; justify-content: space-around; margin-bottom: 15px; font-size: 1.1em; }
+        /* Feedback */
+        .feedback {
+            position: fixed;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 8em;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 2000;
+        }
+
+        @keyframes pop {
+            0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(1.2); opacity: 0; }
+        }
+
+        .animate-pop { animation: pop 0.5s ease-out; }
+
+        /* Stats */
+        .stats-bar {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+            background: rgba(255,255,255,0.05);
+            padding: 10px;
+            border-radius: 10px;
+        }
     </style>
 </head>
 <body>
 
     <div class="content" id="manual-view">
         <h1 style="text-align: center; color: var(--amarillo);">📁 Manual de Agente</h1>
-        <div class="rule-card id"><button class="btn-audio" onclick="speak('Wanted, Decided')">🔊</button><h2>1. /ɪd/ 🔴</h2><p>Base termina en <b>T o D</b>.</p></div>
-        <div class="rule-card t"><button class="btn-audio" onclick="speak('Cooked, Watched')">🔊</button><h2>2. /t/ 🟡</h2><p>Sonido sordo (p, k, f, s, sh, ch, x).</p></div>
-        <div class="rule-card d"><button class="btn-audio" onclick="speak('Played, Ordered')">🔊</button><h2>3. /d/ 🟢</h2><p>Sonido sonoro o vocal.</p></div>
+        
+        <div class="rule-card id">
+            <h2>1. El sonido /ɪd/ 🔴</h2>
+            <h3>La Sílaba Extra</h3>
+            <p>Es físicamente difícil pasar de un sonido /t/ o /d/ directamente a otra "t" o "d" sin una vocal. Por ello, el idioma añade una sílaba adicional.</p>
+            <p><b>Regla:</b> Si el verbo termina en <b>T o D</b>.</p>
+            <small>Ej: Accepted, Decided, Started...</small>
+        </div>
+
+        <div class="rule-card t">
+            <h2>2. El sonido /t/ 🟡</h2>
+            <h3>Regla de Sonidos Sordos</h3>
+            <p>Llamado "asimilación". Si terminas con un sonido sordo (voiceless), es más natural que el siguiente sea sordo (las cuerdas vocales no vibran).</p>
+            <p><b>Regla:</b> Termina en <b>p, k, f, s, sh, ch, x</b>.</p>
+            <small>Ej: Asked, Cooked, Watched...</small>
+        </div>
+
+        
+
+        <div class="rule-card d">
+            <h2>3. El sonido /d/ 🟢</h2>
+            <h3>Regla de Sonidos Sonoros</h3>
+            <p>Si el verbo termina en sonido sonoro, tus cuerdas vocales ya están vibrando. Para mantener la fluidez, se usa /d/ (que también es sonoro).</p>
+            <p><b>Regla:</b> Termina en <b>l, n, r, b, g, v, z, m o Vocal</b>.</p>
+            <small>Ej: Allowed, Played, Worried...</small>
+        </div>
     </div>
 
     <div class="content hidden" id="game-view">
-        <div class="stats-bar"><span>Puntos: <b id="score">0</b></span><span>Racha: <b id="streak">0</b>🔥</span></div>
-        <div class="timer-container"><div id="timer-bar" class="timer-bar"></div></div>
+        <div class="stats-bar">
+            <span>Puntos: <b id="score">0</b></span>
+            <span>Racha: <b id="streak">0</b>🔥</span>
+        </div>
+        
+        <div class="game-header">
+            <p>¿Qué sonido sigue este verbo?</p>
+        </div>
+
         <div id="verb-box" class="verb-display">READY?</div>
-        <button class="choice-btn btn-id" onclick="checkAnswer('id')"><span>/ɪd/</span> 🔴</button>
-        <button class="choice-btn btn-t" onclick="checkAnswer('t')"><span>/t/</span> 🟡</button>
-        <button class="choice-btn btn-d" onclick="checkAnswer('d')"><span>/d/</span> 🟢</button>
+
+        <div class="btn-grid">
+            <button class="choice-btn btn-id" onclick="checkAnswer('id')">
+                <span>/ɪd/ (Sílaba Extra)</span> <span>🔴</span>
+            </button>
+            <button class="choice-btn btn-t" onclick="checkAnswer('t')">
+                <span>/t/ (Sonido Sordo)</span> <span>🟡</span>
+            </button>
+            <button class="choice-btn btn-d" onclick="checkAnswer('d')">
+                <span>/d/ (Sonido Sonoro)</span> <span>🟢</span>
+            </button>
+        </div>
     </div>
 
+    <div id="feedback-icon" class="feedback"></div>
+
     <div class="nav">
-        <div class="nav-item active" id="nav-manual" onclick="showView('manual')">📖<br>Manual</div>
-        <div class="nav-item" id="nav-game" onclick="showView('game')">🎮<br>Jugar</div>
+        <div class="nav-item active" id="nav-manual" onclick="showView('manual')">
+            📖<br>Manual
+        </div>
+        <div class="nav-item" id="nav-game" onclick="showView('game')">
+            🎮<br>Jugar
+        </div>
     </div>
 
     <script>
+        // TUS DATOS EXACTOS
         const verbData = {
-            id: ['Accepted', 'Added', 'Afforded', 'Collected', 'Completed', 'Counted', 'Decided', 'Defended', 'Depended', 'Doubted', 'Ended', 'Expanded', 'Expected', 'Guarded', 'Hated', 'Heated', 'Included', 'Intended', 'Invented', 'Landed', 'Lasted', 'Loaded', 'Needed', 'Objected', 'Planted', 'Pretended', 'Printed', 'Provided', 'Recorded', 'Regretted', 'Reminded', 'Reported', 'Requested', 'Started', 'Submitted', 'Supported', 'Tasted', 'Treated', 'Visited', 'Wanted'],
-            t: ['Asked', 'Brushed', 'Clapped', 'Cooked', 'Crashed', 'Crossed', 'Danced', 'Developed', 'Dressed', 'Dropped', 'Escaped', 'Finished', 'Fixed', 'Guessed', 'Helped', 'Hiked', 'Hoped', 'Introduced', 'Jumped', 'Kicked', 'Laughed', 'Looked', 'Missed', 'Passed', 'Picked', 'Practiced', 'Pushed', 'Relaxed', 'Searched', 'Shopped', 'Skipped', 'Stopped', 'Talked', 'Touched', 'Washed', 'Watched', 'Worked'],
-            d: ['Allowed', 'Answered', 'Belonged', 'Called', 'Changed', 'Cleaned', 'Climbed', 'Closed', 'Compared', 'Covered', 'Damaged', 'Delayed', 'Enjoyed', 'Explained', 'Filled', 'Followed', 'Happened', 'Imagined', 'Joined', 'Killed', 'Listened', 'Lived', 'Loved', 'Managed', 'Measured', 'Moved', 'Named', 'Opened', 'Ordered', 'Planned', 'Played', 'Pulled', 'Realized', 'Remembered', 'Saved', 'Shared', 'Signed', 'Stayed', 'Traveled', 'Tried', 'Used', 'Worried']
+            id: [
+                'Accepted', 'Added', 'Afforded', 'Collected', 'Completed', 'Counted', 
+                'Decided', 'Defended', 'Depended', 'Doubted', 'Ended', 'Expanded', 
+                'Expected', 'Guarded', 'Hated', 'Heated', 'Included', 'Intended', 
+                'Invented', 'Landed', 'Lasted', 'Loaded', 'Needed', 'Objected', 
+                'Planted', 'Pretended', 'Printed', 'Provided', 'Recorded', 
+                'Regretted', 'Reminded', 'Reported', 'Requested', 'Started', 
+                'Submitted', 'Supported', 'Tasted', 'Treated', 'Visited', 'Wanted'
+            ],
+            t: [
+                'Asked', 'Brushed', 'Clapped', 'Cooked', 'Crashed', 'Crossed', 'Danced', 
+                'Developed', 'Dressed', 'Dropped', 'Escaped', 'Finished', 'Fixed', 
+                'Guessed', 'Helped', 'Hiked', 'Hoped', 'Introduced', 'Jumped', 'Kicked', 
+                'Laughed', 'Looked', 'Missed', 'Passed', 'Picked', 'Practiced', 'Pushed', 
+                'Relaxed', 'Searched', 'Shopped', 'Skipped', 'Stopped', 
+                'Talked', 'Touched', 'Washed', 'Watched', 'Worked'
+            ],
+            d: [
+                'Allowed', 'Answered', 'Belonged', 'Called', 'Changed', 'Cleaned', 
+                'Climbed', 'Closed', 'Compared', 'Covered', 'Damaged', 'Delayed', 
+                'Enjoyed', 'Explained', 'Filled', 'Followed', 'Happened', 'Imagined', 
+                'Joined', 'Killed', 'Listened', 'Lived', 'Loved', 'Managed', 'Measured', 
+                'Moved', 'Named', 'Opened', 'Ordered', 'Planned', 'Played', 'Pulled', 
+                'Realized', 'Remembered', 'Saved', 'Shared', 'Signed', 'Stayed', 
+                'Traveled', 'Tried', 'Used', 'Worried'
+            ]
         };
 
-        let score = 0, streak = 0, currentCat = "", timerInterval, timeLeft;
-        const TIME_LIMIT = 5000; // 5 segundos
+        let score = 0;
+        let streak = 0;
+        let currentVerb = "";
+        let currentCat = "";
 
-        function speak(t) { const m = new SpeechSynthesisUtterance(t); m.lang = 'en-US'; window.speechSynthesis.speak(m); }
+        function showView(view) {
+            document.getElementById('manual-view').classList.add('hidden');
+            document.getElementById('game-view').classList.add('hidden');
+            document.getElementById('nav-manual').classList.remove('active');
+            document.getElementById('nav-game').classList.remove('active');
 
-        function showView(v) {
-            document.getElementById('manual-view').classList.toggle('hidden', v !== 'manual');
-            document.getElementById('game-view').classList.toggle('hidden', v !== 'game');
-            document.getElementById('nav-manual').classList.toggle('active', v === 'manual');
-            document.getElementById('nav-game').classList.toggle('active', v === 'game');
-            clearInterval(timerInterval);
-            if(v === 'game') nextVerb();
+            if(view === 'manual') {
+                document.getElementById('manual-view').classList.remove('hidden');
+                document.getElementById('nav-manual').classList.add('active');
+            } else {
+                document.getElementById('game-view').classList.remove('hidden');
+                document.getElementById('nav-game').classList.add('active');
+                nextVerb();
+            }
         }
 
         function nextVerb() {
-            clearInterval(timerInterval);
             const cats = ['id', 't', 'd'];
             currentCat = cats[Math.floor(Math.random() * 3)];
-            const verb = verbData[currentCat][Math.floor(Math.random() * verbData[currentCat].length)];
-            document.getElementById('verb-box').textContent = verb.toUpperCase();
-            document.getElementById('verb-box').style.color = "white";
-            speak(verb);
-            startTimer();
+            const list = verbData[currentCat];
+            currentVerb = list[Math.floor(Math.random() * list.length)];
+            
+            const display = document.getElementById('verb-box');
+            display.textContent = currentVerb.toUpperCase();
+            display.style.color = "white";
         }
 
-        function startTimer() {
-            timeLeft = TIME_LIMIT;
-            const bar = document.getElementById('timer-bar');
-            timerInterval = setInterval(() => {
-                timeLeft -= 100;
-                bar.style.width = (timeLeft / TIME_LIMIT * 100) + "%";
-                if(timeLeft <= 0) {
-                    streak = 0;
-                    document.getElementById('streak').textContent = streak;
-                    nextVerb();
-                }
-            }, 100);
-        }
+        function checkAnswer(userChoice) {
+            const feedback = document.getElementById('feedback-icon');
+            
+            if(userChoice === currentCat) {
+                score += 10 + (streak * 2);
+                streak++;
+                feedback.textContent = "✅";
+                triggerAnimation();
+            } else {
+                streak = 0;
+                feedback.textContent = "❌";
+                triggerAnimation();
+                // Vibración visual en la caja
+                document.getElementById('verb-box').style.color = "var(--rojo)";
+            }
 
-        function checkAnswer(u) {
-            if(u === currentCat) { score += 10 + (streak * 2); streak++; }
-            else { streak = 0; document.getElementById('verb-box').style.color = "var(--rojo)"; }
             document.getElementById('score').textContent = score;
             document.getElementById('streak').textContent = streak;
+            
             setTimeout(nextVerb, 600);
         }
+
+        function triggerAnimation() {
+            const f = document.getElementById('feedback-icon');
+            f.classList.remove('animate-pop');
+            void f.offsetWidth; // Restart animation
+            f.classList.add('animate-pop');
+        }
+
+        // Inicializar
+        window.onload = () => {
+            // No iniciamos juego hasta que cambien de pestaña
+        };
     </script>
 </body>
 </html>
