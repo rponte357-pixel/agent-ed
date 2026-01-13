@@ -10,80 +10,173 @@
             --amarillo: #ffa502;
             --verde: #2ed573;
             --oscuro: #1e2124;
-            --tarjeta: #2f3136;
-            --texto: #ffffff;
+            --tarjeta: #ffffff;
+            --texto: #333333;
+            --fondo-gradiente: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
 
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Segoe UI', sans-serif; }
-        body { margin: 0; background-color: var(--oscuro); color: var(--texto); display: flex; flex-direction: column; min-height: 100vh; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Segoe UI', Tahoma, sans-serif; }
+        
+        body { 
+            margin: 0; 
+            background: var(--fondo-gradiente); 
+            color: var(--texto); 
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
 
-        /* Navegación */
-        .nav { position: fixed; bottom: 0; width: 100%; display: flex; background: #000; padding: 10px 0; z-index: 1000; border-top: 1px solid #333; }
-        .nav-item { flex: 1; text-align: center; color: #8e9297; font-size: 0.8em; cursor: pointer; }
-        .nav-item.active { color: var(--amarillo); font-weight: bold; }
+        /* Navegación Estilo Premium */
+        .nav { 
+            position: fixed; 
+            bottom: 0; 
+            width: 100%; 
+            display: flex; 
+            background: white; 
+            padding: 12px 0; 
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.2);
+            z-index: 1000;
+        }
+        .nav-item { 
+            flex: 1; 
+            text-align: center; 
+            color: #777; 
+            font-size: 0.9em; 
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .nav-item.active { color: #764ba2; transform: scale(1.1); }
 
-        .content { flex: 1; padding: 20px; padding-bottom: 90px; overflow-y: auto; }
+        .content { 
+            flex: 1; 
+            padding: 20px; 
+            padding-bottom: 90px; 
+            max-width: 1000px; 
+            margin: 0 auto; 
+            width: 100%;
+        }
         .hidden { display: none !important; }
 
-        /* Estilos de Cartas y Fichas */
-        .rule-card { background: var(--tarjeta); border-radius: 15px; padding: 20px; margin-bottom: 20px; border-left: 5px solid white; }
-        .rule-card.id { border-color: var(--rojo); }
-        .rule-card.t { border-color: var(--amarillo); }
-        .rule-card.d { border-color: var(--verde); }
+        /* Tarjetas de Manual */
+        .rule-card { 
+            background: white; 
+            border-radius: 15px; 
+            padding: 20px; 
+            margin-bottom: 20px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-left: 8px solid;
+        }
+        .id-style { border-color: var(--rojo); }
+        .t-style { border-color: var(--amarillo); }
+        .d-style { border-color: var(--verde); }
 
-        .practice-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; margin-top: 15px; }
-        .word-card { background: #3e4147; padding: 15px; border-radius: 12px; text-align: center; border-bottom: 4px solid transparent; transition: 0.2s; }
-        .card-id { border-color: var(--rojo); }
-        .card-t { border-color: var(--amarillo); }
-        .card-d { border-color: var(--verde); }
-        .btn-audio-sm { background: #57606f; border: none; color: white; padding: 5px 10px; border-radius: 5px; margin-top: 8px; cursor: pointer; font-size: 0.8em; width: 100%; }
+        /* Fichas de Práctica (Integradas del segundo código) */
+        .practice-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); 
+            gap: 15px; 
+            margin-top: 15px; 
+        }
+        .verb-card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+            cursor: pointer;
+        }
+        .verb-card:active { transform: scale(0.95); }
+        .verb-card b { display: block; font-size: 1.2em; margin-bottom: 10px; }
+        .play-icon { font-size: 1.5em; color: #764ba2; }
 
-        /* Juego */
-        .verb-display { background: var(--tarjeta); height: 160px; display: flex; align-items: center; justify-content: center; border-radius: 20px; font-size: 2.2em; font-weight: bold; margin-bottom: 20px; border: 2px solid #444; }
-        .choice-btn { width: 100%; padding: 18px; border: none; border-radius: 12px; color: white; font-size: 1.1em; font-weight: bold; margin-bottom: 10px; cursor: pointer; display: flex; justify-content: space-between; }
-        .btn-id { background: var(--rojo); }
-        .btn-t { background: var(--amarillo); }
-        .btn-d { background: var(--verde); }
-        
-        .timer-container { width: 100%; height: 6px; background: #444; border-radius: 3px; margin: 15px 0; overflow: hidden; }
+        /* Estilos de Juego */
+        .game-container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+        }
+        .verb-display { 
+            font-size: 3em; 
+            font-weight: bold; 
+            margin: 20px 0;
+            color: #333;
+        }
+        .timer-container { width: 100%; height: 10px; background: #eee; border-radius: 5px; margin: 20px 0; overflow: hidden; }
         .timer-bar { height: 100%; width: 100%; background: var(--amarillo); transition: width 0.1s linear; }
+        
+        .choice-btn { 
+            width: 100%; 
+            padding: 20px; 
+            border: none; 
+            border-radius: 15px; 
+            color: white; 
+            font-size: 1.2em; 
+            font-weight: bold; 
+            margin-bottom: 15px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
     </style>
 </head>
 <body>
 
     <div class="content" id="manual-view">
-        <h1 style="text-align: center; color: var(--amarillo);">📖 Manual de Agente</h1>
-        <div class="rule-card id"><h2>Sonido /ɪd/ 🔴</h2><p>Base termina en <b>T</b> o <b>D</b>. Se añade sílaba.</p></div>
-        <div class="rule-card t"><h2>Sonido /t/ 🟡</h2><p>Base sorda (p, k, f, s, sh, ch, x). Sonido seco.</p></div>
-        <div class="rule-card d"><h2>Sonido /d/ 🟢</h2><p>Base sonora o vocal. Sonido vibrante.</p></div>
+        <h1 style="text-align: center; color: white;">📖 Guía de Pronunciación</h1>
+        <div class="rule-card id-style">
+            <h2 style="color: var(--rojo)">Grupo /ɪd/ (Sílaba Extra)</h2>
+            <p>Se añade una sílaba nueva al final. Solo ocurre si el verbo termina en sonido <b>T</b> o <b>D</b>.</p>
+            <small>Ejemplos: Want-ed, Need-ed</small>
+        </div>
+        <div class="rule-card t-style">
+            <h2 style="color: var(--amarillo)">Grupo /t/ (Sonido Sordo)</h2>
+            <p>La terminación suena como una "T" seca. Ocurre tras sonidos sin vibración: <b>P, K, F, S, SH, CH, X</b>.</p>
+        </div>
+        <div class="rule-card d-style">
+            <h2 style="color: var(--verde)">Grupo /d/ (Sonido Sonoro)</h2>
+            <p>La terminación suena como una "D" suave. Ocurre tras sonidos que vibran o <b>vocales</b>.</p>
+        </div>
     </div>
 
     <div class="content hidden" id="practice-view">
-        <h1 style="text-align: center; color: var(--verde);">🎯 Práctica de Sonidos</h1>
-        <div id="practice-lists"></div>
+        <h1 style="text-align: center; color: white;">🎯 Centro de Práctica</h1>
+        
+        <h2 style="color: white; background: var(--rojo); padding: 10px; border-radius: 10px;">Sonido /ɪd/</h2>
+        <div id="grid-id" class="practice-grid"></div>
+
+        <h2 style="color: white; background: var(--amarillo); padding: 10px; border-radius: 10px; margin-top: 30px;">Sonido /t/</h2>
+        <div id="grid-t" class="practice-grid"></div>
+
+        <h2 style="color: white; background: var(--verde); padding: 10px; border-radius: 10px; margin-top: 30px;">Sonido /d/</h2>
+        <div id="grid-d" class="practice-grid"></div>
     </div>
 
     <div class="content hidden" id="game-view">
-        <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-            <span>Score: <b id="score">0</b></span>
-            <span>Racha: <b id="streak">0</b>🔥</span>
+        <div class="game-container">
+            <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-weight:bold;">
+                <span>Puntos: <span id="score">0</span></span>
+                <span>Racha: <span id="streak">0</span>🔥</span>
+            </div>
+            <div class="timer-container"><div id="timer-bar" class="timer-bar"></div></div>
+            <div id="verb-box" class="verb-display">READY?</div>
+            <button class="choice-btn" style="background:var(--rojo)" onclick="checkAnswer('id')">Sonido /ɪd/</button>
+            <button class="choice-btn" style="background:var(--amarillo)" onclick="checkAnswer('t')">Sonido /t/</button>
+            <button class="choice-btn" style="background:var(--verde)" onclick="checkAnswer('d')">Sonido /d/</button>
         </div>
-        <div class="timer-container"><div id="timer-bar" class="timer-bar"></div></div>
-        <div id="verb-box" class="verb-display">READY?</div>
-        <button class="choice-btn btn-id" onclick="checkAnswer('id')"><span>/ɪd/</span> 🔴</button>
-        <button class="choice-btn btn-t" onclick="checkAnswer('t')"><span>/t/</span> 🟡</button>
-        <button class="choice-btn btn-d" onclick="checkAnswer('d')"><span>/d/</span> 🟢</button>
     </div>
 
     <div class="nav">
-        <div class="nav-item active" id="nav-manual" onclick="showView('manual')">📖<br>Manual</div>
-        <div class="nav-item" id="nav-practice" onclick="showView('practice')">🎯<br>Práctica</div>
-        <div class="nav-item" id="nav-game" onclick="showView('game')">🎮<br>Jugar</div>
+        <div class="nav-item active" id="nav-manual" onclick="showView('manual')">MANUAL</div>
+        <div class="nav-item" id="nav-practice" onclick="showView('practice')">PRÁCTICA</div>
+        <div class="nav-item" id="nav-game" onclick="showView('game')">JUEGO</div>
     </div>
 
     <script>
-        // CONFIGURACIÓN: CAMBIA ESTO POR TU URL REAL
-        const BASE_URL = 'https://rponte357-pixel.github.io/agent-ed/'; 
+        // CONFIGURACIÓN DE RUTA DE AUDIOS
+        // Cambia esto a la dirección de tu carpeta de audios en GitHub
+        const BASE_AUDIO_URL = 'https://rponte357-pixel.github.io/agent-ed/'; 
 
         const verbData = {
             id: ['Accepted', 'Added', 'Afforded', 'Collected', 'Completed', 'Counted', 'Decided', 'Defended', 'Depended', 'Doubted', 'Ended', 'Expanded', 'Expected', 'Guarded', 'Hated', 'Heated', 'Included', 'Intended', 'Invented', 'Landed', 'Lasted', 'Loaded', 'Needed', 'Objected', 'Planted', 'Pretended', 'Printed', 'Provided', 'Recorded', 'Regretted', 'Reminded', 'Reported', 'Requested', 'Started', 'Submitted', 'Supported', 'Tasted', 'Treated', 'Visited', 'Wanted'],
@@ -93,9 +186,12 @@
 
         let score = 0, streak = 0, currentCat = "", timerInterval, timeLeft;
 
-        function playAudio(verb) {
-            const audio = new Audio(`${BASE_URL}${verb}.mp3`);
-            audio.play().catch(() => {
+        // Función para reproducir audio MP3 REAL
+        function playRealAudio(verb) {
+            const audio = new Audio(`${BASE_AUDIO_URL}${verb}.mp3`);
+            audio.play().catch(e => {
+                console.log(`Audio no encontrado para: ${verb}. Usando voz de respaldo.`);
+                // Solo si el MP3 falla, usamos la voz metálica para que no se quede mudo
                 const msg = new SpeechSynthesisUtterance(verb);
                 msg.lang = 'en-US';
                 window.speechSynthesis.speak(msg);
@@ -113,25 +209,17 @@
         }
 
         function renderPractice() {
-            const container = document.getElementById('practice-lists');
-            container.innerHTML = "";
-            const titles = { id: 'Sílaba Extra /ɪd/ 🔴', t: 'Sordo /t/ 🟡', d: 'Sonoro /d/ 🟢' };
-            
-            for (let cat in verbData) {
-                const section = document.createElement('div');
-                section.innerHTML = `<h3 style="margin-top:25px; border-bottom:1px solid #444">${titles[cat]}</h3>`;
-                const grid = document.createElement('div');
-                grid.className = 'practice-grid';
-                verbData[cat].forEach(v => {
-                    grid.innerHTML += `
-                        <div class="word-card card-${cat}">
-                            <b>${v}</b><br>
-                            <button class="btn-audio-sm" onclick="playAudio('${v}')">🔊 Oír</button>
-                        </div>`;
+            ['id', 't', 'd'].forEach(cat => {
+                const grid = document.getElementById(`grid-${cat}`);
+                grid.innerHTML = "";
+                verbData[cat].forEach(verb => {
+                    const card = document.createElement('div');
+                    card.className = 'verb-card';
+                    card.innerHTML = `<b>${verb}</b><span class="play-icon">🔊</span>`;
+                    card.onclick = () => playRealAudio(verb);
+                    grid.appendChild(card);
                 });
-                section.appendChild(grid);
-                container.appendChild(section);
-            }
+            });
         }
 
         function nextVerb() {
@@ -140,8 +228,8 @@
             currentCat = cats[Math.floor(Math.random() * 3)];
             const verb = verbData[currentCat][Math.floor(Math.random() * verbData[currentCat].length)];
             document.getElementById('verb-box').textContent = verb.toUpperCase();
-            document.getElementById('verb-box').style.color = "white";
-            playAudio(verb);
+            document.getElementById('verb-box').style.color = "#333";
+            playRealAudio(verb);
             startTimer();
         }
 
