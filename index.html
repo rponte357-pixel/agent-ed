@@ -15,76 +15,58 @@
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Segoe UI', sans-serif; }
-
         body { margin: 0; background-color: var(--oscuro); color: var(--texto); display: flex; flex-direction: column; min-height: 100vh; }
 
         /* Navegación */
         .nav { position: fixed; bottom: 0; width: 100%; display: flex; background: #000; padding: 10px 0; z-index: 1000; border-top: 1px solid #333; }
-        .nav-item { flex: 1; text-align: center; color: #8e9297; font-size: 0.8em; cursor: pointer; transition: 0.3s; }
-        .nav-item.active { color: var(--amarillo); transform: scale(1.1); }
+        .nav-item { flex: 1; text-align: center; color: #8e9297; font-size: 0.8em; cursor: pointer; }
+        .nav-item.active { color: var(--amarillo); font-weight: bold; }
 
         .content { flex: 1; padding: 20px; padding-bottom: 90px; overflow-y: auto; }
         .hidden { display: none !important; }
 
-        /* Manual y Reglas */
+        /* Estilos de Cartas y Fichas */
         .rule-card { background: var(--tarjeta); border-radius: 15px; padding: 20px; margin-bottom: 20px; border-left: 5px solid white; }
         .rule-card.id { border-color: var(--rojo); }
         .rule-card.t { border-color: var(--amarillo); }
         .rule-card.d { border-color: var(--verde); }
 
-        /* Fichas de Práctica */
-        .practice-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; margin-top: 15px; }
-        .word-card { background: #3e4147; padding: 15px; border-radius: 10px; text-align: center; position: relative; border-bottom: 3px solid transparent; }
+        .practice-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; margin-top: 15px; }
+        .word-card { background: #3e4147; padding: 15px; border-radius: 12px; text-align: center; border-bottom: 4px solid transparent; transition: 0.2s; }
         .card-id { border-color: var(--rojo); }
         .card-t { border-color: var(--amarillo); }
         .card-d { border-color: var(--verde); }
-        .btn-play-sm { background: none; border: none; color: #aaa; cursor: pointer; font-size: 1.2em; margin-top: 5px; }
+        .btn-audio-sm { background: #57606f; border: none; color: white; padding: 5px 10px; border-radius: 5px; margin-top: 8px; cursor: pointer; font-size: 0.8em; width: 100%; }
 
         /* Juego */
-        .timer-container { width: 100%; height: 6px; background: #444; border-radius: 3px; margin: 15px 0; overflow: hidden; }
-        .timer-bar { height: 100%; width: 100%; background: var(--amarillo); transition: width 0.1s linear; }
-        .verb-display { background: var(--tarjeta); height: 150px; display: flex; align-items: center; justify-content: center; border-radius: 20px; font-size: 2.2em; font-weight: bold; margin-bottom: 20px; border: 2px solid #444; text-align: center; }
-        .choice-btn { width: 100%; padding: 18px; border: none; border-radius: 12px; color: white; font-size: 1.1em; font-weight: bold; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; cursor: pointer; }
+        .verb-display { background: var(--tarjeta); height: 160px; display: flex; align-items: center; justify-content: center; border-radius: 20px; font-size: 2.2em; font-weight: bold; margin-bottom: 20px; border: 2px solid #444; }
+        .choice-btn { width: 100%; padding: 18px; border: none; border-radius: 12px; color: white; font-size: 1.1em; font-weight: bold; margin-bottom: 10px; cursor: pointer; display: flex; justify-content: space-between; }
         .btn-id { background: var(--rojo); }
         .btn-t { background: var(--amarillo); }
         .btn-d { background: var(--verde); }
+        
+        .timer-container { width: 100%; height: 6px; background: #444; border-radius: 3px; margin: 15px 0; overflow: hidden; }
+        .timer-bar { height: 100%; width: 100%; background: var(--amarillo); transition: width 0.1s linear; }
     </style>
 </head>
 <body>
 
     <div class="content" id="manual-view">
         <h1 style="text-align: center; color: var(--amarillo);">📖 Manual de Agente</h1>
-        <div class="rule-card id">
-            <h2>Sonido /ɪd/ 🔴</h2>
-            <p>Se añade una sílaba extra. Ocurre cuando el verbo base termina en <b>T</b> o <b>D</b>.</p>
-        </div>
-        <div class="rule-card t">
-            <h2>Sonido /t/ 🟡</h2>
-            <p>Sonido sordo y seco. Ocurre tras sonidos sordos: <b>p, k, f, s, sh, ch, x</b>.</p>
-        </div>
-        <div class="rule-card d">
-            <h2>Sonido /d/ 🟢</h2>
-            <p>Sonido suave y vibrante. Ocurre tras sonidos sonoros o <b>vocales</b>.</p>
-        </div>
+        <div class="rule-card id"><h2>Sonido /ɪd/ 🔴</h2><p>Base termina en <b>T</b> o <b>D</b>. Se añade sílaba.</p></div>
+        <div class="rule-card t"><h2>Sonido /t/ 🟡</h2><p>Base sorda (p, k, f, s, sh, ch, x). Sonido seco.</p></div>
+        <div class="rule-card d"><h2>Sonido /d/ 🟢</h2><p>Base sonora o vocal. Sonido vibrante.</p></div>
     </div>
 
     <div class="content hidden" id="practice-view">
-        <h1 style="text-align: center; color: var(--verde);">🎯 Centro de Práctica</h1>
-        
-        <h3 style="color: var(--rojo);">Sílaba Extra /ɪd/</h3>
-        <div id="list-id" class="practice-grid"></div>
-
-        <h3 style="color: var(--amarillo); margin-top: 30px;">Sonido Sordo /t/</h3>
-        <div id="list-t" class="practice-grid"></div>
-
-        <h3 style="color: var(--verde); margin-top: 30px;">Sonido Sonoro /d/</h3>
-        <div id="list-d" class="practice-grid"></div>
+        <h1 style="text-align: center; color: var(--verde);">🎯 Práctica de Sonidos</h1>
+        <div id="practice-lists"></div>
     </div>
 
     <div class="content hidden" id="game-view">
         <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
             <span>Score: <b id="score">0</b></span>
-            <span>Streak: <b id="streak">0</b>🔥</span>
+            <span>Racha: <b id="streak">0</b>🔥</span>
         </div>
         <div class="timer-container"><div id="timer-bar" class="timer-bar"></div></div>
         <div id="verb-box" class="verb-display">READY?</div>
@@ -96,10 +78,13 @@
     <div class="nav">
         <div class="nav-item active" id="nav-manual" onclick="showView('manual')">📖<br>Manual</div>
         <div class="nav-item" id="nav-practice" onclick="showView('practice')">🎯<br>Práctica</div>
-        <div class="nav-item" id="nav-game" onclick="showView('game')">🎮<br>Juego</div>
+        <div class="nav-item" id="nav-game" onclick="showView('game')">🎮<br>Jugar</div>
     </div>
 
     <script>
+        // CONFIGURACIÓN: CAMBIA ESTO POR TU URL REAL
+        const BASE_URL = 'https://rponte357-pixel.github.io/agent-ed/'; 
+
         const verbData = {
             id: ['Accepted', 'Added', 'Afforded', 'Collected', 'Completed', 'Counted', 'Decided', 'Defended', 'Depended', 'Doubted', 'Ended', 'Expanded', 'Expected', 'Guarded', 'Hated', 'Heated', 'Included', 'Intended', 'Invented', 'Landed', 'Lasted', 'Loaded', 'Needed', 'Objected', 'Planted', 'Pretended', 'Printed', 'Provided', 'Recorded', 'Regretted', 'Reminded', 'Reported', 'Requested', 'Started', 'Submitted', 'Supported', 'Tasted', 'Treated', 'Visited', 'Wanted'],
             t: ['Asked', 'Brushed', 'Clapped', 'Cooked', 'Crashed', 'Crossed', 'Danced', 'Developed', 'Dressed', 'Dropped', 'Escaped', 'Finished', 'Fixed', 'Guessed', 'Helped', 'Hiked', 'Hoped', 'Introduced', 'Jumped', 'Kicked', 'Laughed', 'Looked', 'Missed', 'Passed', 'Picked', 'Practiced', 'Pushed', 'Relaxed', 'Searched', 'Shopped', 'Skipped', 'Stopped', 'Talked', 'Touched', 'Washed', 'Watched', 'Worked'],
@@ -107,45 +92,46 @@
         };
 
         let score = 0, streak = 0, currentCat = "", timerInterval, timeLeft;
-        const TIME_LIMIT = 5000;
 
-        // Función para reproducir audio (Grabado o Sistema)
-        function playVerbAudio(verb) {
-            const audio = new Audio(`${verb}.mp3`);
+        function playAudio(verb) {
+            const audio = new Audio(`${BASE_URL}${verb}.mp3`);
             audio.play().catch(() => {
-                // Si falla el archivo .mp3, usa la voz del sistema
                 const msg = new SpeechSynthesisUtterance(verb);
                 msg.lang = 'en-US';
                 window.speechSynthesis.speak(msg);
             });
         }
 
-        // Cargar fichas de práctica
-        function loadPracticeCards() {
-            ['id', 't', 'd'].forEach(cat => {
-                const container = document.getElementById(`list-${cat}`);
-                container.innerHTML = "";
-                verbData[cat].forEach(verb => {
-                    const card = document.createElement('div');
-                    card.className = `word-card card-${cat}`;
-                    card.innerHTML = `
-                        <div><b>${verb}</b></div>
-                        <button class="btn-play-sm" onclick="playVerbAudio('${verb}')">🔊 Escuchar</button>
-                    `;
-                    container.appendChild(card);
-                });
-            });
-        }
-
         function showView(v) {
-            document.querySelectorAll('.content').forEach(el => el.classList.add('hidden'));
-            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.content').forEach(c => c.classList.add('hidden'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             document.getElementById(`${v}-view`).classList.remove('hidden');
             document.getElementById(`nav-${v}`).classList.add('active');
-            
             clearInterval(timerInterval);
-            if(v === 'practice') loadPracticeCards();
+            if(v === 'practice') renderPractice();
             if(v === 'game') nextVerb();
+        }
+
+        function renderPractice() {
+            const container = document.getElementById('practice-lists');
+            container.innerHTML = "";
+            const titles = { id: 'Sílaba Extra /ɪd/ 🔴', t: 'Sordo /t/ 🟡', d: 'Sonoro /d/ 🟢' };
+            
+            for (let cat in verbData) {
+                const section = document.createElement('div');
+                section.innerHTML = `<h3 style="margin-top:25px; border-bottom:1px solid #444">${titles[cat]}</h3>`;
+                const grid = document.createElement('div');
+                grid.className = 'practice-grid';
+                verbData[cat].forEach(v => {
+                    grid.innerHTML += `
+                        <div class="word-card card-${cat}">
+                            <b>${v}</b><br>
+                            <button class="btn-audio-sm" onclick="playAudio('${v}')">🔊 Oír</button>
+                        </div>`;
+                });
+                section.appendChild(grid);
+                container.appendChild(section);
+            }
         }
 
         function nextVerb() {
@@ -153,19 +139,18 @@
             const cats = ['id', 't', 'd'];
             currentCat = cats[Math.floor(Math.random() * 3)];
             const verb = verbData[currentCat][Math.floor(Math.random() * verbData[currentCat].length)];
-            const box = document.getElementById('verb-box');
-            box.textContent = verb.toUpperCase();
-            box.style.color = "white";
-            playVerbAudio(verb);
+            document.getElementById('verb-box').textContent = verb.toUpperCase();
+            document.getElementById('verb-box').style.color = "white";
+            playAudio(verb);
             startTimer();
         }
 
         function startTimer() {
-            timeLeft = TIME_LIMIT;
+            timeLeft = 5000;
             const bar = document.getElementById('timer-bar');
             timerInterval = setInterval(() => {
                 timeLeft -= 100;
-                bar.style.width = (timeLeft / TIME_LIMIT * 100) + "%";
+                bar.style.width = (timeLeft / 5000 * 100) + "%";
                 if(timeLeft <= 0) { streak = 0; updateStats(); nextVerb(); }
             }, 100);
         }
@@ -182,8 +167,7 @@
             document.getElementById('streak').textContent = streak;
         }
 
-        // Inicializar
-        window.onload = () => loadPracticeCards();
+        window.onload = renderPractice;
     </script>
 </body>
 </html>
