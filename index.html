@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Misión Pronunciación -ed</title>
+    <style>
+        :root {
+            --rojo: #ff4757;
+            --amarillo: #ffa502;
+            --verde: #2ed573;
+            --oscuro: #1e2124;
+            --tarjeta: #2f3136;
+            --texto: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background-color: var(--oscuro);
+            color: var(--texto);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Navegación Inferior Móvil */
+        .nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            display: flex;
+            background: #000;
+            padding: 10px 0;
+            z-index: 1000;
+        }
+
+        .nav-item {
+            flex: 1;
+            text-align: center;
+            color: #8e9297;
+            font-size: 0.8em;
+            cursor: pointer;
+        }
+
+        .nav-item.active { color: var(--amarillo); }
+
+        /* Contenedores */
+        .content {
+            flex: 1;
+            padding: 20px;
+            padding-bottom: 80px;
+            overflow-y: auto;
+        }
+
+        .hidden { display: none !important; }
+
+        /* Estilos del Manual (Tus Reglas) */
+        .rule-card {
+            background: var(--tarjeta);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 5px solid white;
+        }
+        .rule-card.id { border-color: var(--rojo); }
+        .rule-card.t { border-color: var(--amarillo); }
+        .rule-card.d { border-color: var(--verde); }
+
+        .rule-card h2 { margin-top: 0; font-size: 1.4em; }
+        .rule-card h3 { color: #bbb; font-size: 1em; }
+
+        /* Estilos del Juego */
+        .game-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .verb-display {
+            background: var(--tarjeta);
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 20px;
+            font-size: 3em;
+            font-weight: bold;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            border: 2px solid #444;
+        }
+
+        .btn-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        .choice-btn {
+            padding: 20px;
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 1.2em;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-id { background: var(--rojo); }
+        .btn-t { background: var(--amarillo); }
+        .btn-d { background: var(--verde); }
+
+        /* Feedback */
+        .feedback {
+            position: fixed;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 8em;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 2000;
+        }
+
+        @keyframes pop {
+            0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(1.2); opacity: 0; }
+        }
+
+        .animate-pop { animation: pop 0.5s ease-out; }
+
+        /* Stats */
+        .stats-bar {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+            background: rgba(255,255,255,0.05);
+            padding: 10px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="content" id="manual-view">
+        <h1 style="text-align: center; color: var(--amarillo);">📁 Manual de Agente</h1>
+        
+        <div class="rule-card id">
+            <h2>1. El sonido /ɪd/ 🔴</h2>
+            <h3>La Sílaba Extra</h3>
+            <p>Es físicamente difícil pasar de un sonido /t/ o /d/ directamente a otra "t" o "d" sin una vocal. Por ello, el idioma añade una sílaba adicional.</p>
+            <p><b>Regla:</b> Si el verbo termina en <b>T o D</b>.</p>
+            <small>Ej: Accepted, Decided, Started...</small>
+        </div>
+
+        <div class="rule-card t">
+            <h2>2. El sonido /t/ 🟡</h2>
+            <h3>Regla de Sonidos Sordos</h3>
+            <p>Llamado "asimilación". Si terminas con un sonido sordo (voiceless), es más natural que el siguiente sea sordo (las cuerdas vocales no vibran).</p>
+            <p><b>Regla:</b> Termina en <b>p, k, f, s, sh, ch, x</b>.</p>
+            <small>Ej: Asked, Cooked, Watched...</small>
+        </div>
+
+        
+
+        <div class="rule-card d">
+            <h2>3. El sonido /d/ 🟢</h2>
+            <h3>Regla de Sonidos Sonoros</h3>
+            <p>Si el verbo termina en sonido sonoro, tus cuerdas vocales ya están vibrando. Para mantener la fluidez, se usa /d/ (que también es sonoro).</p>
+            <p><b>Regla:</b> Termina en <b>l, n, r, b, g, v, z, m o Vocal</b>.</p>
+            <small>Ej: Allowed, Played, Worried...</small>
+        </div>
+    </div>
+
+    <div class="content hidden" id="game-view">
+        <div class="stats-bar">
+            <span>Puntos: <b id="score">0</b></span>
+            <span>Racha: <b id="streak">0</b>🔥</span>
+        </div>
+        
+        <div class="game-header">
+            <p>¿Qué sonido sigue este verbo?</p>
+        </div>
+
+        <div id="verb-box" class="verb-display">READY?</div>
+
+        <div class="btn-grid">
+            <button class="choice-btn btn-id" onclick="checkAnswer('id')">
+                <span>/ɪd/ (Sílaba Extra)</span> <span>🔴</span>
+            </button>
+            <button class="choice-btn btn-t" onclick="checkAnswer('t')">
+                <span>/t/ (Sonido Sordo)</span> <span>🟡</span>
+            </button>
+            <button class="choice-btn btn-d" onclick="checkAnswer('d')">
+                <span>/d/ (Sonido Sonoro)</span> <span>🟢</span>
+            </button>
+        </div>
+    </div>
+
+    <div id="feedback-icon" class="feedback"></div>
+
+    <div class="nav">
+        <div class="nav-item active" id="nav-manual" onclick="showView('manual')">
+            📖<br>Manual
+        </div>
+        <div class="nav-item" id="nav-game" onclick="showView('game')">
+            🎮<br>Jugar
+        </div>
+    </div>
+
+    <script>
+        // TUS DATOS EXACTOS
+        const verbData = {
+            id: [
+                'Accepted', 'Added', 'Afforded', 'Collected', 'Completed', 'Counted', 
+                'Decided', 'Defended', 'Depended', 'Doubted', 'Ended', 'Expanded', 
+                'Expected', 'Guarded', 'Hated', 'Heated', 'Included', 'Intended', 
+                'Invented', 'Landed', 'Lasted', 'Loaded', 'Needed', 'Objected', 
+                'Ordered', 'Planted', 'Pretended', 'Printed', 'Provided', 'Recorded', 
+                'Regretted', 'Reminded', 'Reported', 'Requested', 'Started', 
+                'Submitted', 'Supported', 'Treated', 'Visited', 'Wanted'
+            ],
+            t: [
+                'Asked', 'Brushed', 'Clapped', 'Cooked', 'Crashed', 'Crossed', 'Danced', 
+                'Developed', 'Dressed', 'Dropped', 'Escaped', 'Finished', 'Fixed', 
+                'Guessed', 'Helped', 'Hiked', 'Hoped', 'Introduced', 'Jumped', 'Kicked', 
+                'Laughed', 'Looked', 'Missed', 'Passed', 'Picked', 'Practiced', 'Pushed', 
+                'Relaxed', 'Searched', 'Shared', 'Shopped', 'Skipped', 'Stopped', 
+                'Talked', 'Tasted', 'Touched', 'Washed', 'Watched', 'Worked'
+            ],
+            d: [
+                'Allowed', 'Answered', 'Belonged', 'Called', 'Changed', 'Cleaned', 
+                'Climbed', 'Closed', 'Compared', 'Covered', 'Damaged', 'Delayed', 
+                'Enjoyed', 'Explained', 'Filled', 'Followed', 'Happened', 'Imagined', 
+                'Joined', 'Killed', 'Listened', 'Lived', 'Loved', 'Managed', 'Measured', 
+                'Moved', 'Named', 'Opened', 'Planned', 'Played', 'Pulled', 'Realized', 
+                'Remembered', 'Saved', 'Signed', 'Stayed', 'Traveled', 'Tried', 
+                'Used', 'Worried'
+            ]
+        };
+
+        let score = 0;
+        let streak = 0;
+        let currentVerb = "";
+        let currentCat = "";
+
+        function showView(view) {
+            document.getElementById('manual-view').classList.add('hidden');
+            document.getElementById('game-view').classList.add('hidden');
+            document.getElementById('nav-manual').classList.remove('active');
+            document.getElementById('nav-game').classList.remove('active');
+
+            if(view === 'manual') {
+                document.getElementById('manual-view').classList.remove('hidden');
+                document.getElementById('nav-manual').classList.add('active');
+            } else {
+                document.getElementById('game-view').classList.remove('hidden');
+                document.getElementById('nav-game').classList.add('active');
+                nextVerb();
+            }
+        }
+
+        function nextVerb() {
+            const cats = ['id', 't', 'd'];
+            currentCat = cats[Math.floor(Math.random() * 3)];
+            const list = verbData[currentCat];
+            currentVerb = list[Math.floor(Math.random() * list.length)];
+            
+            const display = document.getElementById('verb-box');
+            display.textContent = currentVerb.toUpperCase();
+            display.style.color = "white";
+        }
+
+        function checkAnswer(userChoice) {
+            const feedback = document.getElementById('feedback-icon');
+            
+            if(userChoice === currentCat) {
+                score += 10 + (streak * 2);
+                streak++;
+                feedback.textContent = "✅";
+                triggerAnimation();
+            } else {
+                streak = 0;
+                feedback.textContent = "❌";
+                triggerAnimation();
+                // Vibración visual en la caja
+                document.getElementById('verb-box').style.color = "var(--rojo)";
+            }
+
+            document.getElementById('score').textContent = score;
+            document.getElementById('streak').textContent = streak;
+            
+            setTimeout(nextVerb, 600);
+        }
+
+        function triggerAnimation() {
+            const f = document.getElementById('feedback-icon');
+            f.classList.remove('animate-pop');
+            void f.offsetWidth; // Restart animation
+            f.classList.add('animate-pop');
+        }
+
+        // Inicializar
+        window.onload = () => {
+            // No iniciamos juego hasta que cambien de pestaña
+        };
+    </script>
+</body>
+</html>
